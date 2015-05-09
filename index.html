@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Table锁定行列</title>
+
+
+    <script type="text/javascript" src="YTable.js"></script>
+    <script type="text/javascript" src="jquery_v1.6.2.js"></script>
+    <link type="text/css" rel="stylesheet" href="package.css">
+
+    <script type="text/javascript">
+
+    </script>
+    <style type="text/css">
+            button{
+                width: 80px;
+                height: 23px;
+            }
+            #page,#sort,#select{
+                color: red;
+            }
+    </style>
+</head>
+<body>
+
+<div style="margin:20px auto;width:500px">
+    <button onclick="s.prevPage()">prev</button>
+    <button onclick="s.nextPage()">next</button>
+    <button onclick="s.hideColumn('number')">隐藏(number)列</button>
+        <button onclick="s.showColumn('number')">显示(number)列</button>
+          <button onclick="s.toggleColumn('name')" style="color:red">toggle(name)列</button>
+</div>
+
+<div  style="margin:0px auto;width:800px">
+    <span style="color: red;">1、多表头。2、点击列头可以排序。 3、拖动列边框可调整列宽、4，方法调用，事件回调，render列渲染，各种数字格式支持（可自实现）。</span>
+</div>
+
+<div style="border:1px dashed green;padding:5px;margin-left:205px;width:740px">
+<div>
+    <span>当前页: </span><span id="page">1</span>
+</div>
+    <div id="sort">
+        当前无排序列
+    </div>
+
+    <div>当前选中行:<span id="select"></span>
+
+    </div>
+</div>
+
+<div>
+    <div style="border: 1px dashed red;width: 200px;height:100px;display: inline-block"></div>
+    <div id="table1" class="table_wrap" style="display: inline-block;width: 750px;border: 1px dashed red">
+    </div>
+</div>
+
+<script type="text/javascript">
+var columns = [
+    {id: "name", text: "姓名"},
+    {id: "number", text: "数字",  type: 'float'},
+    {id: "render", text: "render测试", onrender:function(value,row){
+                    if(value == 10000003){
+                        return "its you ! nima!";
+                    }
+    }},
+    {id: "muti", text: "芝麻开门", group: [
+        {id: "percent", text: "百分数测试",type:'rate'},
+        {id: "small", text: "很小"}
+    ]},
+    {id: "sex", text: "性别"}
+];
+var data =(function(){
+    var arr=[];
+    for(var i=0;i<3000;i++) {
+        arr.push({
+            "name":"中文测试中文测试"+i,
+            "number":i,
+            "percent":i,
+            "small":"x",
+            "sex":i % 2 ==0 ? '男' : '女',
+            "render":'render'+i
+        });
+    }
+    return arr;
+})();
+
+
+s = new YTable({
+    domId: "table1",
+    columns: columns,
+    data: data,
+    pageSize: 15,
+    onPage: function (curPage) {
+        $("#page").html(curPage);
+    },
+    onSort: function (field, text, type) {
+        $("#sort").html("<p>" + "排序列:" + field + "; 排序类型:" + (type ==1 ? 'asc':'desc') + "</p>");
+    },
+    onSelected: function (row) {
+        $("#select").html(JSON.stringify(row));
+    }
+});
+</script>
+
+</body>
+</html>
